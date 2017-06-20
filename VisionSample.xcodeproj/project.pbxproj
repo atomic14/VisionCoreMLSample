@@ -312,6 +312,7 @@
 				88C6A9D31EF863CC00CC4360 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
