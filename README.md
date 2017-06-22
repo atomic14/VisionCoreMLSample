@@ -6,7 +6,7 @@ Click [here](https://www.youtube.com/watch?v=S33BNcnlxdU) for a better demo.
 
 You will need the beta version of xCode and a device running the iOS 11 beta (make sure you only install the beta software on a test device!).
 
-###CoreML Model
+### CoreML Model
 
 If you have [Git LFS](https://git-lfs.github.com) installed, the required CoreML will download as part of the git clone.
 
