@@ -9,19 +9,16 @@
 import UIKit
 import AVFoundation
 import Vision
-import ReplayKit
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
   // video capture session
   let session = AVCaptureSession()
   // preview layer
   var previewLayer: AVCaptureVideoPreviewLayer!
-  // overlay layer
-  var gradientLayer: CAGradientLayer!
   // queue for processing video frames
   let captureQueue = DispatchQueue(label: "captureQueue")
-  var cameraInput: AVCaptureDeviceInput!
-  var videoOutput: AVCaptureVideoDataOutput!
+  // overlay layer
+  var gradientLayer: CAGradientLayer!
   // vision request
   var visionRequests = [VNRequest]()
   
@@ -37,18 +34,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     do {
       // add the preview layer
       previewLayer = AVCaptureVideoPreviewLayer(session: session)
-      self.previewView.layer.addSublayer(previewLayer)
+      previewView.layer.addSublayer(previewLayer)
       // add a slight gradient overlay so we can read the results easily
       gradientLayer = CAGradientLayer()
       gradientLayer.colors = [
-        UIColor.init(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.5).cgColor,
-        UIColor.init(colorLiteralRed: 0, green: 0, blue: 0, alpha: 0.0).cgColor
+        UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.7).cgColor,
+        UIColor.init(red: 0, green: 0, blue: 0, alpha: 0.0).cgColor,
       ]
       gradientLayer.locations = [0.0, 0.3]
       self.previewView.layer.addSublayer(gradientLayer)
+      
       // create the capture input and the video output
-      cameraInput = try AVCaptureDeviceInput(device: camera)
-      videoOutput = AVCaptureVideoDataOutput()
+      let cameraInput = try AVCaptureDeviceInput(device: camera)
+      
+      let videoOutput = AVCaptureVideoDataOutput()
       videoOutput.setSampleBufferDelegate(self, queue: captureQueue)
       videoOutput.alwaysDiscardsLateVideoFrames = true
       videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
@@ -58,7 +57,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
       session.addInput(cameraInput)
       session.addOutput(videoOutput)
       
-      // make sure we ar ein portrait mode
+      // make sure we are in portrait mode
       let conn = videoOutput.connection(with: .video)
       conn?.videoOrientation = .portrait
       
@@ -72,7 +71,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
       // set up the request using our vision model
       let classificationRequest = VNCoreMLRequest(model: visionModel, completionHandler: handleClassifications)
       classificationRequest.imageCropAndScaleOption = VNImageCropAndScaleOptionCenterCrop
-      self.visionRequests = [classificationRequest]
+      visionRequests = [classificationRequest]
     } catch {
       fatalError(error.localizedDescription)
     }
@@ -88,7 +87,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
       return
     }
-    connection.videoOrientation = AVCaptureVideoOrientation.landscapeLeft;
+    
+    connection.videoOrientation = .portrait
     
     var requestOptions:[VNImageOption: Any] = [:]
     
@@ -106,11 +106,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
   }
   
   func handleClassifications(request: VNRequest, error: Error?) {
-    guard let observations = request.results else {
-      print("no results: \(String(describing: error))");
+    if let theError = error {
+      print("Error: \(theError.localizedDescription)")
       return
     }
-    
+    guard let observations = request.results else {
+      print("No results")
+      return
+    }
     let classifications = observations[0...4] // top 4 results
       .flatMap({ $0 as? VNClassificationObservation })
       .map({ "\($0.identifier) \(($0.confidence * 100.0).rounded())" })
