@@ -4,6 +4,8 @@
 
 Click [here](https://www.youtube.com/watch?v=S33BNcnlxdU) for a better demo.
 
+You can find a detailed breakdown of the code here: https://blog.cmgresearch.com/2017/06/22/vision-kit-and-coreml.html
+
 You will need the beta version of xCode and a device running the iOS 11 beta (make sure you only install the beta software on a test device!).
 
 ### CoreML Model
