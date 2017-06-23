@@ -12,7 +12,7 @@ You will need the beta version of xCode and a device running the iOS 11 beta (ma
 
 ~~If you have [Git LFS](https://git-lfs.github.com) installed, the required CoreML will download as part of the git clone.~~
 
-~~Otherwise you can download the CoreML model - Resnet50.mlmodel from here: ~~
+~~Otherwise you can download the CoreML model - Resnet50.mlmodel from here:~~
 
 Unfortunately we've had to remove the model from Git LFS as we were running out bandwidth!
 
