@@ -24,9 +24,30 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XOY-uT-XVO">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="ebf-NW-UPV" appends="YES" id="Vpp-r5-A0W"/>
+                                </connections>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38g-bS-WI8">
-                                <rect key="frame" x="16" y="40" width="343" height="20.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="2YS-ST-HbS">
+                                <rect key="frame" x="16" y="576.5" width="343" height="50.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zes-gz-1Xr" userLabel="Threshhold">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.25" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="zD9-tU-9WM">
+                                        <rect key="frame" x="-2" y="20.5" width="347" height="31"/>
+                                        <connections>
+                                            <action selector="sliderValueChangedWithSlider:" destination="BYZ-38-t0r" eventType="valueChanged" id="IxH-n8-bKa"/>
+                                        </connections>
+                                    </slider>
+                                </subviews>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38g-bS-WI8">
+                                <rect key="frame" x="16" y="40" width="343" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="500" id="zED-Ri-lr7"/>
                                 </constraints>
@@ -41,7 +62,10 @@
                             <constraint firstItem="XOY-uT-XVO" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="KT6-rN-9CY"/>
                             <constraint firstItem="XOY-uT-XVO" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="ORw-h7-1Yh"/>
                             <constraint firstItem="38g-bS-WI8" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="40" id="OpA-4Y-lkb"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="2YS-ST-HbS" secondAttribute="bottom" constant="40" id="Qpb-KK-TTd"/>
+                            <constraint firstAttribute="trailing" secondItem="2YS-ST-HbS" secondAttribute="trailing" constant="16" id="kzh-ZU-1JJ"/>
                             <constraint firstAttribute="bottom" secondItem="XOY-uT-XVO" secondAttribute="bottom" id="rPF-05-UEU"/>
+                            <constraint firstItem="2YS-ST-HbS" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="tZc-wH-KBn"/>
                             <constraint firstItem="38g-bS-WI8" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="uU9-8R-i6W"/>
                             <constraint firstItem="38g-bS-WI8" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="wRr-d8-QHu"/>
                         </constraints>
@@ -49,9 +73,17 @@
                     <connections>
                         <outlet property="previewView" destination="XOY-uT-XVO" id="Rjk-vE-Mng"/>
                         <outlet property="resultView" destination="38g-bS-WI8" id="IC1-nI-Cbd"/>
+                        <outlet property="threshholdLabel" destination="zes-gz-1Xr" id="nFi-OT-Xtk"/>
+                        <outlet property="threshholdSlider" destination="zD9-tU-9WM" id="hud-tQ-KWX"/>
+                        <outlet property="thresholdStackView" destination="2YS-ST-HbS" id="goC-1m-Ouf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="ebf-NW-UPV">
+                    <connections>
+                        <action selector="userTappedWithSender:" destination="BYZ-38-t0r" id="oJK-vp-vke"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="32.799999999999997" y="37.331334332833585"/>
         </scene>

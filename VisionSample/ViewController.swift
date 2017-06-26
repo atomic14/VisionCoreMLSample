@@ -21,8 +21,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
   var gradientLayer: CAGradientLayer!
   // vision request
   var visionRequests = [VNRequest]()
+    
+    var recognitionThreshold : Float = 0.25
   
-  @IBOutlet weak var previewView: UIView!
+    @IBOutlet weak var thresholdStackView: UIStackView!
+    @IBOutlet weak var threshholdLabel: UILabel!
+    @IBOutlet weak var threshholdSlider: UISlider!
+    
+    @IBOutlet weak var previewView: UIView!
   @IBOutlet weak var resultView: UILabel!
   
   override func viewDidLoad() {
@@ -65,18 +71,24 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
       session.startRunning()
       
       // set up the vision model
-      guard let visionModel = try? VNCoreMLModel(for: Resnet50().model) else {
+      guard let resNet50Model = try? VNCoreMLModel(for: Resnet50().model) else {
         fatalError("Could not load model")
       }
       // set up the request using our vision model
-      let classificationRequest = VNCoreMLRequest(model: visionModel, completionHandler: handleClassifications)
+      let classificationRequest = VNCoreMLRequest(model: resNet50Model, completionHandler: handleClassifications)
       classificationRequest.imageCropAndScaleOption = VNImageCropAndScaleOptionCenterCrop
       visionRequests = [classificationRequest]
     } catch {
       fatalError(error.localizedDescription)
     }
+    
+    updateThreshholdLabel()
   }
-  
+    
+    func updateThreshholdLabel () {
+        self.threshholdLabel.text = "Threshold: " + String(format: "%.2f", recognitionThreshold)
+    }
+    
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     previewLayer.frame = self.previewView.bounds;
@@ -104,7 +116,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
       print(error)
     }
   }
-  
+    
+    @IBAction func userTapped(sender: Any) {
+        self.thresholdStackView.isHidden = !self.thresholdStackView.isHidden
+    }
+    
+    @IBAction func sliderValueChanged(slider: UISlider) {
+        self.recognitionThreshold = slider.value
+        updateThreshholdLabel()
+    }
+    
   func handleClassifications(request: VNRequest, error: Error?) {
     if let theError = error {
       print("Error: \(theError.localizedDescription)")
@@ -114,14 +135,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
       print("No results")
       return
     }
+    
     let classifications = observations[0...4] // top 4 results
-      .flatMap({ $0 as? VNClassificationObservation })
-      .map({ "\($0.identifier) \(($0.confidence * 100.0).rounded())" })
-      .joined(separator: "\n")
+        .flatMap({ $0 as? VNClassificationObservation })
+        .flatMap({$0.confidence > recognitionThreshold ? $0 : nil})
+        .map({ "\($0.identifier) \(($0.confidence * 100.0).rounded())" })
+        .joined(separator: "\n")
     
     DispatchQueue.main.async {
-      self.resultView.text = classifications
+        self.resultView.text = classifications
     }
+    
   }
 }
 
