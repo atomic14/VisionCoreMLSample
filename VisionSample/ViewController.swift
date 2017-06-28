@@ -139,7 +139,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     let classifications = observations[0...4] // top 4 results
         .flatMap({ $0 as? VNClassificationObservation })
         .flatMap({$0.confidence > recognitionThreshold ? $0 : nil})
-        .map({ "\($0.identifier) \(($0.confidence * 100.0).rounded())" })
+      .map({ "\($0.identifier) \(String(format:"%.2f", $0.confidence))" })
         .joined(separator: "\n")
     
     DispatchQueue.main.async {
