@@ -76,7 +76,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
       }
       // set up the request using our vision model
       let classificationRequest = VNCoreMLRequest(model: resNet50Model, completionHandler: handleClassifications)
-      classificationRequest.imageCropAndScaleOption = VNImageCropAndScaleOptionCenterCrop
+      classificationRequest.imageCropAndScaleOption = .centerCrop
       visionRequests = [classificationRequest]
     } catch {
       fatalError(error.localizedDescription)
@@ -109,7 +109,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     // for orientation see kCGImagePropertyOrientation
-    let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: 1, options: requestOptions)
+    let imageRequestHandler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, orientation: .upMirrored, options: requestOptions)
     do {
       try imageRequestHandler.perform(self.visionRequests)
     } catch {
