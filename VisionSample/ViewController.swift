@@ -93,6 +93,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     super.viewDidLayoutSubviews()
     previewLayer.frame = self.previewView.bounds;
     gradientLayer.frame = self.previewView.bounds;
+    
+    let orientation: UIDeviceOrientation = UIDevice.current.orientation;
+    switch (orientation) {
+    case .portrait:
+        previewLayer?.connection?.videoOrientation = .portrait
+    case .landscapeRight:
+        previewLayer?.connection?.videoOrientation = .landscapeLeft
+    case .landscapeLeft:
+        previewLayer?.connection?.videoOrientation = .landscapeRight
+    case .portraitUpsideDown:
+        previewLayer?.connection?.videoOrientation = .portraitUpsideDown
+    default:
+        previewLayer?.connection?.videoOrientation = .portrait
+    }
   }
   
   func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
